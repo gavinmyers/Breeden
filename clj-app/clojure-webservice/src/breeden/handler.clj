@@ -4,7 +4,7 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 (defroutes app-routes
-  (GET "/" [] "Hello Gavin")
+  (GET "/" [] "Hello Gavin, this is the clojure webservice")
   (route/not-found "Not Found"))
 
 (def app
