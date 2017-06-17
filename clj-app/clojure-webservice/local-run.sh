@@ -1,1 +1,1 @@
-lein ring server
+lein ring server-headless
