@@ -8,6 +8,14 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Monoid ((<>))
 import GHC.Generics
 
+data Reading = Reading { temp :: Int } deriving (Show, Generic)
+instance ToJSON Reading 
+instance FromJSON Reading 
+
+data Station = Station { stationId :: String, readings :: [Reading] } deriving (Show, Generic)
+instance ToJSON Station
+instance FromJSON Station 
+
 data User = User { userId :: Int, userName :: String } deriving (Show, Generic)
 instance ToJSON User
 instance FromJSON User
@@ -19,7 +27,7 @@ main = scotty 3000 $ do
   middleware logStdoutDev
   post "/" $ do
     resp <- jsonData 
-    json (resp :: User) 
+    json (resp :: Station) 
 
   get "/health" $ do
     text "UP"
