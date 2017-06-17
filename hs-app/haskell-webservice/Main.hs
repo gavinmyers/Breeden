@@ -27,7 +27,7 @@ main = scotty 3000 $ do
   middleware logStdoutDev
   post "/" $ do
     resp <- jsonData 
-    json (resp :: Station) 
+    json (resp :: [Station]) 
 
   get "/health" $ do
     text "UP"
