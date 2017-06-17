@@ -6,7 +6,7 @@
 
 (defroutes app-routes
   (GET "/" [] "Hello Gavin, this is the clojure webservice")
-  (POST "/" {body :body} (str "baz: " (:baz (parse-string (slurp body) true))))
+  (POST "/" {body :body} (str  (keys (parse-string (slurp body) true))))
   (route/not-found "Not Found"))
 
 
