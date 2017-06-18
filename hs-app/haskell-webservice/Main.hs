@@ -14,8 +14,14 @@ data Station = Station { stationId :: String, readings :: [Reading] } deriving (
 instance ToJSON Station
 instance FromJSON Station 
 
-hasStation :: String -> [Station] -> [Station] 
-hasStation sid stations = filter (\station -> stationId station == sid) stations 
+temperature :: Reading -> Int
+temperature r = (temp r)
+
+temperatures :: [Reading] -> [Int]
+temperatures rs = map temperature rs
+
+station :: String -> [Station] -> Station 
+station sid stations = head (filter (\station -> stationId station == sid) stations) 
 
 main :: IO ()
 main = scotty 3000 $ do
@@ -27,7 +33,7 @@ main = scotty 3000 $ do
   post "/:station" $ do
     resp <- jsonData 
     sid <- param "station"
-    json (hasStation sid resp)
+    json (sum (temperatures (readings (station sid resp))))
 
   get "/:word" $ do
     w <- param "word"
