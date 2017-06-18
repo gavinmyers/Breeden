@@ -29,10 +29,7 @@ main = scotty 3000 $ do
     sid <- param "station"
     json (hasStation sid resp)
 
-  get "/health" $ do
-    text "UP"
-
   get "/:word" $ do
-    beam <- param "word"
-    html $ mconcat ["<h1>Gavin, ", beam, " me up!</h1>"]
+    w <- param "word"
+    html $ mconcat ["<h1>Gavin, ", w, " is the word!</h1>"]
 
