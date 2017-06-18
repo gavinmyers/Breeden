@@ -22,8 +22,8 @@ data User = User { userId :: Int, userName :: String } deriving (Show, Generic)
 instance ToJSON User
 instance FromJSON User
 
-hasStation :: String -> [Station] -> String 
-hasStation id stations = "True" 
+hasStation :: String -> [Station] -> [Station] 
+hasStation id stations = filter (\station -> stationId station == id) stations 
 
 main :: IO ()
 main = scotty 3000 $ do
@@ -35,7 +35,7 @@ main = scotty 3000 $ do
   post "/:station" $ do
     resp <- jsonData 
     id <- param "station"
-    html (encodeToLazyText (hasStation id resp))
+    json (hasStation id resp)
 
   get "/health" $ do
     text "UP"
