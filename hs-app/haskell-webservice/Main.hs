@@ -3,8 +3,10 @@
 
 
 import Web.Scotty
+import Debug.Trace
 import Network.Wai.Middleware.RequestLogger
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson.Text (encodeToLazyText)
 import Data.Monoid ((<>))
 import GHC.Generics
 
@@ -19,8 +21,9 @@ instance FromJSON Station
 data User = User { userId :: Int, userName :: String } deriving (Show, Generic)
 instance ToJSON User
 instance FromJSON User
-obj :: User
-obj = User { userId = 1, userName = "bob" }
+
+hasStation :: String -> [Station] -> String 
+hasStation id stations = "True" 
 
 main :: IO ()
 main = scotty 3000 $ do
@@ -28,6 +31,11 @@ main = scotty 3000 $ do
   post "/" $ do
     resp <- jsonData 
     json (resp :: [Station]) 
+
+  post "/:station" $ do
+    resp <- jsonData 
+    id <- param "station"
+    html (encodeToLazyText (hasStation id resp))
 
   get "/health" $ do
     text "UP"
