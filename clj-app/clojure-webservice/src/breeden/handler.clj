@@ -19,6 +19,8 @@
 (defroutes app-routes
   (GET "/" [] "Hello Gavin, this is the clojure webservice")
   (POST "/" {body :body} (pr-str (parse-body body)))
+  (POST "/:sid" {body :body params :params} (str (get params :sid) (pr-str params) (pr-str (parse-string (slurp body)))))
+
   (route/not-found "Not Found"))
 
 (def app (wrap-defaults app-routes (assoc-in site-defaults [:security :anti-forgery] false)))
