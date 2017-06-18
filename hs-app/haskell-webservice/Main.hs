@@ -1,13 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-
 import Web.Scotty
-import Debug.Trace
 import Network.Wai.Middleware.RequestLogger
 import Data.Aeson (FromJSON, ToJSON)
-import Data.Aeson.Text (encodeToLazyText)
-import Data.Monoid ((<>))
 import GHC.Generics
 
 data Reading = Reading { temp :: Int } deriving (Show, Generic)
@@ -18,12 +14,8 @@ data Station = Station { stationId :: String, readings :: [Reading] } deriving (
 instance ToJSON Station
 instance FromJSON Station 
 
-data User = User { userId :: Int, userName :: String } deriving (Show, Generic)
-instance ToJSON User
-instance FromJSON User
-
 hasStation :: String -> [Station] -> [Station] 
-hasStation id stations = filter (\station -> stationId station == id) stations 
+hasStation sid stations = filter (\station -> stationId station == sid) stations 
 
 main :: IO ()
 main = scotty 3000 $ do
@@ -34,8 +26,8 @@ main = scotty 3000 $ do
 
   post "/:station" $ do
     resp <- jsonData 
-    id <- param "station"
-    json (hasStation id resp)
+    sid <- param "station"
+    json (hasStation sid resp)
 
   get "/health" $ do
     text "UP"
