@@ -4,22 +4,19 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [cheshire.core :refer :all] ))
 
-(defn numbers [coll] 
-  (filter number? coll))
+(defn temperature [reading]
+  (get reading "temp"))
 
-(defn avg [coll]
-  (/ (reduce + (numbers coll)) (max (count (numbers coll)) 1)))
+(defn temperatures [readings]
+  (map #(temperature %) readings))
 
-(defn get-speed [nodes] 
-  (avg (map read-string (map #(get % :SPD) nodes))))
-
-(defn parse-body [body] 
-  (map #(get-speed (val %)) (parse-string (slurp body) true)))
+(defn station [sid, stations] 
+  (first (filter #(= (str (get % :stationId) sid)) stations)))
 
 (defroutes app-routes
   (GET "/" [] "Hello Gavin, this is the clojure webservice")
-  (POST "/" {body :body} (pr-str (parse-body body)))
-  (POST "/:sid" {body :body params :params} (str (get params :sid) (pr-str params) (pr-str (parse-string (slurp body)))))
+  (POST "/:sid" {body :body params :params} 
+    (pr-str (apply + (temperatures (get (station (get params :sid) (parse-string (slurp body))) "readings")))))
 
   (route/not-found "Not Found"))
 
