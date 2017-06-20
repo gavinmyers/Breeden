@@ -23,6 +23,9 @@ temperatures rs = map temperature rs
 station :: String -> [Station] -> Station 
 station sid stations = head (filter (\station -> stationId station == sid) stations) 
 
+average_temperature :: Station -> Int 
+average_temperature st = (div (sum (temperatures (readings st))) (length (temperatures (readings st)))) 
+
 main :: IO ()
 main = scotty 3000 $ do
   middleware logStdoutDev
@@ -33,7 +36,7 @@ main = scotty 3000 $ do
   post "/:station" $ do
     resp <- jsonData 
     sid <- param "station"
-    json (sum (temperatures (readings (station sid resp))))
+    json (average_temperature (station sid resp))
 
   get "/:word" $ do
     w <- param "word"
