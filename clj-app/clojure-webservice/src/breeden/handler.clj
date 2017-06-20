@@ -13,10 +13,16 @@
 (defn station [sid, stations] 
   (first (filter #(= (str (get % :stationId) sid)) stations)))
 
+(defn average-temperature [station]
+  (let [readings (get station "readings")]  
+    (/ (apply + (temperatures readings)) (count readings)) ))
+
+
 (defroutes app-routes
   (GET "/" [] "Hello Gavin, this is the clojure webservice")
   (POST "/:sid" {body :body params :params} 
-    (pr-str (apply + (temperatures (get (station (get params :sid) (parse-string (slurp body))) "readings")))))
+    (let [station (station (get params :sid) (parse-string (slurp body)))]
+      (pr-str (average-temperature station)) ))
 
   (route/not-found "Not Found"))
 
