@@ -24,7 +24,9 @@ station :: String -> [Station] -> Station
 station sid stations = head (filter (\station -> stationId station == sid) stations) 
 
 average_temperature :: Station -> Int 
-average_temperature st = (div (sum (temperatures (readings st))) (length (temperatures (readings st)))) 
+average_temperature st = do
+  let tps = (temperatures(readings st))
+  (div (sum tps) (length tps)) 
 
 main :: IO ()
 main = scotty 3000 $ do

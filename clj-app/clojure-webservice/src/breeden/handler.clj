@@ -13,9 +13,9 @@
 (defn station [sid, stations] 
   (first (filter #(= (str (get % :stationId) sid)) stations)))
 
-(defn average-temperature [station]
-  (let [readings (get station "readings")]  
-    (/ (apply + (temperatures readings)) (count readings)) ))
+(defn average-temperature [st]
+  (let [tps (temperatures (get st "readings"))]  
+    (/ (apply + tps) (count tps)) ))
 
 
 (defroutes app-routes
